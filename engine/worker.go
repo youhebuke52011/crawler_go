@@ -7,6 +7,6 @@ func worker(r Request) (ParserResult, error) {
 	if err != nil{
 		return ParserResult{},err
 	}
-	parserResult := r.ParserFunc(bytes, r.Url)
+	parserResult := r.ParserFunc(bytes)
 	return parserResult,nil
 }

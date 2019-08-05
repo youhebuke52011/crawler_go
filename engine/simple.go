@@ -23,7 +23,6 @@ func (s *SimpleEngine) Run(sends ...Request) {
 		}
 		requests = append(requests, result.Requests...)
 
-		fmt.Printf("%v", result.Items)
-		fmt.Println()
+		fmt.Printf("%s:\n %v\n\n", row.Url,result.Items)
 	}
 }
