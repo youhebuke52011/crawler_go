@@ -14,13 +14,13 @@ func ParseCityList(s []byte) engine.ParserResult {
 
 	result := engine.ParserResult{}
 
-	for i, m := range matches {
+	for _, m := range matches {
 
-		if i==5{
-			break
-		}
+		//if i==5{
+		//	break
+		//}
 
-		//result.Items = append(result.Items, engine.Item{Url: string(m[1]), Name: string(m[2])})
+		result.Items = append(result.Items, engine.Item{Url: string(m[1]), Name: string(m[2])})
 		result.Requests = append(result.Requests, engine.Request{
 			Url:        string(m[1]),
 			ParserFunc: ParseCity,
