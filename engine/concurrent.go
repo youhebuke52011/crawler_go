@@ -14,7 +14,7 @@ type Scheduler interface {
 	Run()
 	Submit(request Request)
 	WorkerChan() chan Request
-	//WorkerReady()
+	WorkerReady(chan Request)
 }
 
 type ReadyNotifier interface {
@@ -25,11 +25,9 @@ func (c *ConCurrentEngine) Run(sends ...Request) {
 	out := make(chan ParserResult)
 
 	c.Scheduler.Run()
-
 	for i := 0; i < c.ChanCount; i++ {
-		c.CreateWorker(c.Scheduler.WorkerChan(), out, c.WorkerReady)
+		c.CreateWorker(c.Scheduler.WorkerChan(), out, c.Scheduler)
 	}
-
 	for _, row := range sends {
 		c.Scheduler.Submit(row)
 	}
@@ -52,7 +50,8 @@ func (c *ConCurrentEngine) CreateWorker(in chan Request, out chan ParserResult, 
 	go func() {
 		for {
 			ready.WorkerReady(in)
-			result, err := worker(<-in)
+			request := <-in
+			result, err := worker(request)
 			if err != nil {
 				continue
 			}
