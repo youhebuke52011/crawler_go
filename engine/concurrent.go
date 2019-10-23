@@ -50,6 +50,7 @@ func (c *ConCurrentEngine) Run(sends ...Request) {
 func (c *ConCurrentEngine) CreateWorker(in chan Request, out chan ParserResult, ready ReadyNotifier) {
 	go func() {
 		for {
+			// 告诉scheduler worker已经ready
 			ready.WorkerReady(in)
 			request := <-in
 			result, err := worker(request)
