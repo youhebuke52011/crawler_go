@@ -34,6 +34,7 @@ func (c *ConCurrentEngine) Run(sends ...Request) {
 
 	for {
 		result := <-out
+		// TODO: 需要改为存储
 		for _, row := range result.Items {
 			fmt.Printf("%v", row)
 		}
