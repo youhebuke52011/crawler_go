@@ -37,6 +37,7 @@ func (q *QueueScheduler) Run() {
 				requestQueue = append(requestQueue, r)
 			case w := <-q.workerChannel:
 				workerQueue = append(workerQueue, w)
+			//	TODO: why?
 			case activityWorker <- activityRequest:
 				requestQueue = requestQueue[1:]
 				workerQueue = workerQueue[1:]
