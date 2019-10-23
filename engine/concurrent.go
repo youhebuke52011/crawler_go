@@ -11,10 +11,10 @@ type ConCurrentEngine struct {
 }
 
 type Scheduler interface {
+	ReadyNotifier
 	Run()
 	Submit(request Request)
 	WorkerChan() chan Request
-	WorkerReady(chan Request)
 }
 
 type ReadyNotifier interface {
