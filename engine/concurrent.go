@@ -1,13 +1,10 @@
 package engine
 
-import (
-	"fmt"
-)
-
 type ConCurrentEngine struct {
 	Scheduler   Scheduler
 	ChanCount   int
 	WorkerReady ReadyNotifier
+	ItemChan    chan Item
 }
 
 type Scheduler interface {
@@ -24,23 +21,32 @@ type ReadyNotifier interface {
 func (c *ConCurrentEngine) Run(sends ...Request) {
 	out := make(chan ParserResult)
 
+	// 先把调度器跑起来
 	c.Scheduler.Run()
+
+	// 创建worker
 	for i := 0; i < c.ChanCount; i++ {
 		c.CreateWorker(c.Scheduler.WorkerChan(), out, c.Scheduler)
 	}
+
+	// 提交任务给调度器
 	for _, row := range sends {
 		c.Scheduler.Submit(row)
 	}
 
 	for {
 		result := <-out
-		// TODO: 需要改为存储
-		for _, row := range result.Items {
-			fmt.Printf("%v", row)
+		for _, item := range result.Items {
+			//fmt.Printf("%v", item)
+			// 小心坑
+			go func(item Item) {
+				c.ItemChan <- item
+			}(item)
 		}
-		fmt.Println()
+		//fmt.Println()
 
 		for _, row := range result.Requests {
+			// TODO: 需要加个去重
 			c.Scheduler.Submit(row)
 		}
 	}

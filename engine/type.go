@@ -10,7 +10,7 @@ type ParserResult struct {
 	// agent
 	Requests []Request
 	// 用于存储有用信息
-	Items [] Item
+	Items []Item
 }
 
 type Item struct {
